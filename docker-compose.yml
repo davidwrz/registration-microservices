@@ -1,6 +1,6 @@
 services:
-  postgres:
-    container_name: postgres
+  postgres-user:
+    container_name: postgres-user
     image: postgres
     environment:
       POSTGRES_USER: davidwrz
@@ -10,6 +10,21 @@ services:
       - postgres:/data/postgres
     ports:
       - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  postgres-fraud:
+    container_name: postgres-fraud
+    image: postgres
+    environment:
+      POSTGRES_USER: davidwrz
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5433:5432"
     networks:
       - postgres
     restart: unless-stopped
@@ -24,7 +39,7 @@ services:
     volumes:
       - pgadmin:/var/lib/pgadmin
     ports:
-      - "5051:80"
+      - "5050:80"
     networks:
       - postgres
     restart: unless-stopped
