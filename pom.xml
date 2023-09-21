@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>user</module>
+        <module>fraud</module>
     </modules>
 
     <properties>
