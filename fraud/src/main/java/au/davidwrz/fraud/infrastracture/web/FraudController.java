@@ -1,5 +1,6 @@
 package au.davidwrz.fraud.infrastracture.web;
 
+import au.davidwrz.clients.fraud.FraudCheckResponse;
 import au.davidwrz.fraud.domain.FraudCheck;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

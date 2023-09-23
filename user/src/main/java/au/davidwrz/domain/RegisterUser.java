@@ -1,6 +1,8 @@
 package au.davidwrz.domain;
 
 import au.davidwrz.application.RegisterUserDto;
+import au.davidwrz.clients.fraud.FraudCheckResponse;
+import au.davidwrz.clients.fraud.FraudClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -9,10 +11,12 @@ public class RegisterUser {
 
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
+    private final FraudClient fraudClient;
 
-    public RegisterUser(UserRepository userRepository, RestTemplate restTemplate) {
+    public RegisterUser(UserRepository userRepository, RestTemplate restTemplate, FraudClient fraudClient) {
         this.userRepository = userRepository;
         this.restTemplate = restTemplate;
+        this.fraudClient = fraudClient;
     }
 
     public void register(RegisterUserDto registerUserDto) {
@@ -22,11 +26,7 @@ public class RegisterUser {
                 .email(registerUserDto.email())
                 .build();
         userRepository.saveAndFlush(user);
-        FraudCheckResponse fraudCheckResponse = restTemplate.getForObject(
-                "http://FRAUD/api/v1/fraud-check/{userId}",
-                FraudCheckResponse.class,
-                user.getId()
-        );
+        FraudCheckResponse fraudCheckResponse = fraudClient.isFraudster(user.getId());
         if (fraudCheckResponse.isFraudster()) {
             throw new IllegalCallerException("fraudster");
         }
