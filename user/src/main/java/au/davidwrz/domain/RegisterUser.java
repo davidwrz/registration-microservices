@@ -23,7 +23,7 @@ public class RegisterUser {
                 .build();
         userRepository.saveAndFlush(user);
         FraudCheckResponse fraudCheckResponse = restTemplate.getForObject(
-                "http://localhost:8082/api/v1/fraud-check/{userId}",
+                "http://FRAUD/api/v1/fraud-check/{userId}",
                 FraudCheckResponse.class,
                 user.getId()
         );
