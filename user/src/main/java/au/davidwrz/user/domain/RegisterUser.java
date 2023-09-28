@@ -1,10 +1,10 @@
-package au.davidwrz.domain;
+package au.davidwrz.user.domain;
 
-import au.davidwrz.application.RegisterUserDto;
+import au.davidwrz.amqp.RabbitMQMessageProducer;
 import au.davidwrz.clients.fraud.FraudCheckResponse;
 import au.davidwrz.clients.fraud.FraudClient;
-import au.davidwrz.clients.notifications.NotificationClient;
 import au.davidwrz.clients.notifications.NotificationRequest;
+import au.davidwrz.user.application.RegisterUserDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,19 +12,19 @@ public class RegisterUser {
 
     private final UserRepository userRepository;
     private final FraudClient fraudClient;
-    private final NotificationClient notificationClient;
+    private final RabbitMQMessageProducer messageProducer;
 
-    public RegisterUser(UserRepository userRepository, FraudClient fraudClient, NotificationClient notificationClient) {
+    public RegisterUser(UserRepository userRepository, FraudClient fraudClient, RabbitMQMessageProducer messageProducer) {
         this.userRepository = userRepository;
         this.fraudClient = fraudClient;
-        this.notificationClient = notificationClient;
+        this.messageProducer = messageProducer;
     }
 
     public void register(RegisterUserDto registerUserDto) {
         User user = createUser(registerUserDto);
         userRepository.saveAndFlush(user);
 
-        checkIfUserIsFraudster(user);
+//        checkIfUserIsFraudster(user);
         sendNotification(user);
     }
 
@@ -44,9 +44,12 @@ public class RegisterUser {
     }
 
     private void sendNotification(User user) {
-        notificationClient.sendNotification(new NotificationRequest(
+        NotificationRequest notificationRequest = new NotificationRequest(
                 user.getId(),
                 user.getEmail(),
-                "User registered"));
+                "User registered");
+        messageProducer.publish(notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key");
     }
 }

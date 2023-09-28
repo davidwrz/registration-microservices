@@ -1,4 +1,4 @@
-package au.davidwrz.application;
+package au.davidwrz.user.application;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

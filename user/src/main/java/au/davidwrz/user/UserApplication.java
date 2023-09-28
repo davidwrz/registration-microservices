@@ -1,10 +1,15 @@
-package au.davidwrz;
+package au.davidwrz.user;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@SpringBootApplication
+@SpringBootApplication(
+        scanBasePackages = {
+                "au.davidwrz.user",
+                "au.davidwrz.amqp",
+        }
+)
 @EnableFeignClients(
         basePackages = "au.davidwrz.clients"
 )
