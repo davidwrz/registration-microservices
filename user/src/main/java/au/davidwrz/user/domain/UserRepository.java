@@ -1,4 +1,4 @@
-package au.davidwrz.domain;
+package au.davidwrz.user.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

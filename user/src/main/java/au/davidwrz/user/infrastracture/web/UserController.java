@@ -1,7 +1,7 @@
-package au.davidwrz.infrastracture.web;
+package au.davidwrz.user.infrastracture.web;
 
-import au.davidwrz.application.RegisterUserDto;
-import au.davidwrz.domain.RegisterUser;
+import au.davidwrz.user.application.RegisterUserDto;
+import au.davidwrz.user.domain.RegisterUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

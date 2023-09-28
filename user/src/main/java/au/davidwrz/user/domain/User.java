@@ -1,4 +1,4 @@
-package au.davidwrz.domain;
+package au.davidwrz.user.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

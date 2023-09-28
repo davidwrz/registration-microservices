@@ -15,6 +15,7 @@
         <module>clients</module>
         <module>notifications</module>
         <module>api-gateway</module>
+        <module>messagequeue</module>
     </modules>
 
     <properties>
