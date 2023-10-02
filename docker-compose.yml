@@ -10,6 +10,7 @@ services:
       - postgres:/data/postgres
     ports:
       - "5432:5432"
+
     networks:
       - postgres
     restart: unless-stopped
@@ -66,8 +67,75 @@ services:
       - "5672:5672"
       - "15672:15672"
 
+  eureka:
+    image: davidwrz/eureka:latest
+    container_name: eureka
+    ports:
+      - "8761:8761"
+    networks:
+      - spring
+
+  api-gateway:
+    image: davidwrz/api-gateway:latest
+    container_name: api-gateway
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+    depends_on:
+      - eureka
+
+  user:
+    image: davidwrz/user:latest
+    container_name: user
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - eureka
+      - postgres-user
+      - rabbitmq
+
+  fraud:
+    image: davidwrz/fraud:latest
+    container_name: fraud
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - eureka
+      - postgres-fraud
+      - rabbitmq
+
+  notifications:
+    image: davidwrz/notifications:latest
+    container_name: notifications
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - eureka
+      - postgres-notifications
+      - rabbitmq
+
 networks:
   postgres:
+    driver: bridge
+  spring:
     driver: bridge
 
 volumes:
